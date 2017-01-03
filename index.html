@@ -31,6 +31,7 @@
           read_blob(event.clipboardData.items[i].getAsFile());
           return;
         }
+      }
     });
     the_file.onchange = function() {
       read_blob(the_file.files[0]);
