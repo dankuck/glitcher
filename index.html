@@ -43,6 +43,9 @@
       the_img.src = "data:image/jpg;base64," + btoa(data);
     };
     unglitch_button.onclick = function() {
+      if (datas.length <= 1) {
+        return;
+      }
       datas.pop();
       set_data(datas.pop());
     };
