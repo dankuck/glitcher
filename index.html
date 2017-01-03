@@ -41,7 +41,7 @@
       data = d;
       datas.push(d);
       if (datas.length > 5) {
-        datas.slice(datas.length - 5);
+        datas = datas.slice(datas.length - 5);
       }
       the_img.src = "data:image/jpg;base64," + btoa(data);
     };
