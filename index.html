@@ -2,9 +2,38 @@
 <body>
   <div>
     <input type="file" id="the_file" />
+    <button id="refresh_button">⟳</button>
+    <button id="glitch_button">+</button>
   </div>
   <div>
     <img id="the_img" />
   </div>
+  <script type="text/javascript">
+    var the_file = document.getElementById('the_file');
+    var the_img = document.getElementById('the_img');
+    var url;
+    var original_url;
+    var refresh_button = document.getElementById('refresh_button');
+    var glitch_button = document.getElementById('glitch_button');
+    the_file.onchange = function() {
+      var reader = new FileReader();
+      reader.onload = function(read) {
+        url = read.target.result
+        original_url = url;
+        the_img.src = url;
+      };
+      reader.readAsDataURL(the_file.files[0]);
+    };
+    glitch_button.onclick = function() {
+      var x = parseInt(Math.random() * url.length);
+      var y = parseInt(Math.random() * url.length);
+      url = url.substr(0, x) + url[y] + url.substr(x + 1, y - x) + url[x] + url.substr(y + 1);
+      the_img.src = url;
+    };
+    refresh_button.onclick = function() {
+      url = original_url;
+      the_img.src = url;
+    };
+  </script>
 </body>
 </html>
