@@ -25,14 +25,20 @@
     var refresh_button = document.getElementById('refresh_button');
     var glitch_button = document.getElementById('glitch_button');
     var unglitch_button = document.getElementById('unglitch_button');
+    document.addEventListener('paste', function(event){
+      read_blob(event.clipboardData.items[0]);
+    });
     the_file.onchange = function() {
+      read_blob(the_file.files[0]);
+    };
+    function read_blob(blob) {
       var reader = new FileReader();
       reader.onload = function(read) {
         original_data = read.target.result;
         set_data(original_data, true);
       };
-      reader.readAsBinaryString(the_file.files[0]);
-    };
+      reader.readAsBinaryString(blob);
+    }
     glitch_button.onclick = function() {
       var x = parseInt(Math.random() * data.length);
       var y = parseInt(Math.random() * data.length);
