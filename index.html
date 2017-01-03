@@ -18,21 +18,22 @@
     the_file.onchange = function() {
       var reader = new FileReader();
       reader.onload = function(read) {
-        data = read.target.result
-        original_data = data;
-        the_img.src = btoa(data);
+        original_data = read.target.result
+        set_data(original_data);
       };
       reader.readAsBinaryString(the_file.files[0]);
     };
     glitch_button.onclick = function() {
       var x = parseInt(Math.random() * data.length);
       var y = parseInt(Math.random() * data.length);
-      data = data.substr(0, x) + data[y] + data.substr(x + 1, y - x) + data[x] + data.substr(y + 1);
-      the_img.src = btoa(data);
+      set_data(data.substr(0, x) + data[y] + data.substr(x + 1, y - x) + data[x] + data.substr(y + 1));
     };
     refresh_button.onclick = function() {
-      data = original_data;
-      the_img.src = btoa(data);
+      set_data(original_data);
+    };
+    set_data = function(d) {
+      data = d;
+      the_img.src = "data:image/jpg;base64," + btoa(data);
     };
   </script>
 </body>
