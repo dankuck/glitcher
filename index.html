@@ -3,6 +3,7 @@
   <div>
     <input type="file" id="the_file" />
     <button id="refresh_button">⟳</button>
+    <button id="unglitch_button">-</button>
     <button id="glitch_button">+</button>
   </div>
   <div>
@@ -13,13 +14,15 @@
     var the_img = document.getElementById('the_img');
     var data;
     var original_data;
+    var datas = [];
     var refresh_button = document.getElementById('refresh_button');
     var glitch_button = document.getElementById('glitch_button');
+    var unglitch_button = document.getElementById('unglitch_button');
     the_file.onchange = function() {
       var reader = new FileReader();
       reader.onload = function(read) {
-        original_data = read.target.result
-        set_data(original_data);
+        original_data = read.target.result;
+        set_data(original_data, true);
       };
       reader.readAsBinaryString(the_file.files[0]);
     };
@@ -29,11 +32,19 @@
       set_data(data.substr(0, x) + data[y] + data.substr(x + 1, y - x) + data[x] + data.substr(y + 1));
     };
     refresh_button.onclick = function() {
-      set_data(original_data);
+      set_data(original_data, true);
     };
-    set_data = function(d) {
+    function set_data(d, clear_history) {
+      if (clear_history) {
+        datas = [];
+      }
       data = d;
+      datas.push(d);
       the_img.src = "data:image/jpg;base64," + btoa(data);
+    };
+    unglitch_button.onclick = function() {
+      datas.pop();
+      set_data(datas.pop());
     };
   </script>
 </body>
