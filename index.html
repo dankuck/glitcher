@@ -26,7 +26,7 @@
     var glitch_button = document.getElementById('glitch_button');
     var unglitch_button = document.getElementById('unglitch_button');
     document.addEventListener('paste', function(event){
-      read_blob(event.clipboardData.items[0]);
+      read_blob(event.clipboardData.items[0].getAsFile());
     });
     the_file.onchange = function() {
       read_blob(the_file.files[0]);
