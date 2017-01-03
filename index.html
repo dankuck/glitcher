@@ -26,7 +26,11 @@
     var glitch_button = document.getElementById('glitch_button');
     var unglitch_button = document.getElementById('unglitch_button');
     document.addEventListener('paste', function(event){
-      read_blob(event.clipboardData.items[0].getAsFile());
+      for (var i = 0; i < event.clipboardData.items.length; i++) {
+        if (/image\//.test(event.clipboardData.items[i].type)) {
+          read_blob(event.clipboardData.items[i].getAsFile());
+          return;
+        }
     });
     the_file.onchange = function() {
       read_blob(the_file.files[0]);
