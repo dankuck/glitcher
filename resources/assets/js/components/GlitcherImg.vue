@@ -1,14 +1,14 @@
 <template>
     <img 
         :src="base64Data" 
-        style="max-width: 300px; max-height: 300px;"
+        :style="{'max-width': (maxWidth || 300) + 'px', 'max-height': (maxHeight || 300) + 'px'}"
         @click="clicked"
     />
 </template>
 
 <script>
 export default {
-    props: ['data'],
+    props: ['data', 'maxWidth', 'maxHeight'],
     computed: {
         base64Data() {
             return "data:image/jpg;base64," + btoa(this.data);
