@@ -1,16 +1,27 @@
 <template>
     <div>
         <input type="file" @change="openFile" />
-        <div style="width: 100%; height: 330px; overflow-x: scroll">
-            <glitcher-img v-for="(data, index) in earlier" :data="data" @click="rechoose(index)">
-            </glitcher-img>
+        <div class="history">
+            HISTORY
+            <transition name="fade" v-for="(data, index) in history">
+                <glitcher-img :data="data" @click="rechoose(index)" :maxHeight="100" :maxWidth="100">
+                </glitcher-img>
+            </transition>
+            <div v-if="history.length === 0" class="explainer">
+                Open a file, then choose a mutation to get started.
+            </div>
         </div>
-        <glitcher-img v-if="current" :data="current" :maxWidth="500" :maxHeight="500">
-        </glitcher-img>
-        <div>
-            <glitcher-img v-for="(data, index) in mutations" :data="data" @click="choose(index)">
-            </glitcher-img>
+        <div class="work">
+            <div class="current" v-if="current">
+                <glitcher-img :data="current">
+                </glitcher-img>
+            </div>
+            <div class="mutation" v-for="(data, index) in mutations">
+                <glitcher-img :data="data" @click="choose(index)">
+                </glitcher-img>
+            </div>
         </div>
+        <div style="clear: both"></div>
     </div>
 </template>
 
@@ -40,6 +51,11 @@ export default {
                   var length = Math.random() * 64;
                   return data.substr(0, i) + data.substr(i, length).split("").reverse().join("") + data.substr(i + length);
                 },
+                function (data) {
+                  var x = parseInt(Math.random() * data.length);
+                  var y = parseInt(Math.random() * data.length);
+                  return data.substr(0, x) + (data[y] ^ data[x]) + data.substr(x + 1, y - x) + (data[y] ^ data[x]) + data.substr(y + 1);
+                },
             ],
         };
     },
@@ -47,8 +63,8 @@ export default {
         current() {
             return this.path[this.path.length - 1];
         },
-        earlier() {
-            return this.path.slice(0, -1);
+        history() {
+            return this.path.slice(0, -1).reverse();
         },
     },
     methods: {
@@ -70,13 +86,59 @@ export default {
             this.remutate();
         },
         rechoose(index) {
-            this.path.splice(index + 1);
+            this.path.splice(this.path.length - (index + 1));
             this.remutate();
         },
         remutate() {
+            this.mutations = [];
             var data = this.current;
-            this.mutations = this.mutators.map((mutator) => mutator(data));
+            var mutators = this.mutators.slice();
+            var gen = () => {
+                this.mutations.push(mutators.pop()(data));
+                if (mutators.length) {
+                    setTimeout(gen, 100);
+                }
+            };
+            setTimeout(gen, 100);
         },
     },
 }
 </script>
+
+<style>
+.history {
+    width: 120px;
+    float: left;
+    min-height: 100%;
+    margin: 1em;
+}
+    .history img {
+        padding: 10px;
+        border-radius: 15px;
+    }
+.work {
+    margin: 1em;
+}
+.current, .mutation {
+    float: left;
+    margin: 1em;
+}
+    .current img, .mutation img {
+        border-radius: 15px;
+        border: 3px solid #DDD;
+    }
+    .current img {
+        border-color: #844;
+    }
+.explainer {
+    font-size: 90%;
+    font-style: italic;
+    margin: .5em;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: all .3s ease;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+</style>
