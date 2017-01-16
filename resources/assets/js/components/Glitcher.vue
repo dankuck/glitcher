@@ -8,7 +8,7 @@
                 </glitcher-img>
             </transition>
             <div v-if="history.length === 0" class="explainer">
-                Open a file, then choose a mutation to get started.
+                Open or paste an image, then choose a mutation to get started.
             </div>
         </div>
         <div class="work">
@@ -59,6 +59,18 @@ export default {
             ],
         };
     },
+    mounted() {
+        Vue.nextTick(() => {
+            document.addEventListener('paste', (event) => {
+                for (var i = 0; i < event.clipboardData.items.length; i++) {
+                    if (/image\//.test(event.clipboardData.items[i].type)) {
+                        this.convertToJpg(event.clipboardData.items[i].getAsFile());
+                        return;
+                    }
+                }
+            });
+        });
+    },
     computed: {
         current() {
             return this.path[this.path.length - 1];
@@ -78,6 +90,27 @@ export default {
             reader.onload = (read) => {
                 this.path = [read.target.result];
                 this.remutate();
+            };
+            reader.readAsBinaryString(blob);
+        },
+        convertToJpg(blob) {
+            var reader = new FileReader();
+            reader.onload = (read) => {
+                var str = read.target.result;
+                var canvas = document.createElement('canvas');
+                document.body.appendChild(canvas);
+                var context = canvas.getContext('2d');
+                var img = new Image();
+                img.src = "data:image/png;base64," + btoa(str);
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        this.readBlob(blob);
+                        document.body.removeChild(canvas);
+                    }, 'image/jpeg', 11/12);
+                };
             };
             reader.readAsBinaryString(blob);
         },
@@ -109,7 +142,7 @@ export default {
 .history {
     width: 120px;
     float: left;
-    min-height: 100%;
+    min-height: 1800px;
     margin: 1em;
 }
     .history img {
