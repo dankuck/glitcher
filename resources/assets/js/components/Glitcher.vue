@@ -4,7 +4,7 @@
         <div class="history">
             HISTORY
             <transition name="fade" v-for="(data, index) in history">
-                <glitcher-img :data="data" @click="rechoose(index)" :maxHeight="100" :maxWidth="100">
+                <glitcher-img class="pointer" :data="data" @click="rechoose(index)" :maxHeight="100" :maxWidth="100">
                 </glitcher-img>
             </transition>
             <div v-if="history.length === 0" class="explainer">
@@ -16,7 +16,7 @@
                 <glitcher-img :data="current">
                 </glitcher-img>
             </div>
-            <div class="mutation" v-for="(data, index) in mutations">
+            <div class="mutation pointer" v-for="(data, index) in mutations">
                 <glitcher-img :data="data" @click="choose(index)">
                 </glitcher-img>
             </div>
@@ -140,5 +140,8 @@ export default {
 }
 .fade-enter, .fade-leave-to {
     opacity: 0;
+}
+.pointer {
+    cursor: pointer;
 }
 </style>
