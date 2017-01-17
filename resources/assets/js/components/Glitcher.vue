@@ -12,11 +12,11 @@
             </div>
         </div>
         <div class="work">
-            <div class="current" v-if="current">
-                <glitcher-img :data="current">
-                </glitcher-img>
-            </div>
             <transition-group name="fade">
+                <div class="current" v-if="current" :key="current">
+                    <glitcher-img :data="current">
+                    </glitcher-img>
+                </div>
                 <div class="mutation pointer" v-for="(data, index) in mutations" :key="data">
                     <glitcher-img :data="data" @click="choose(index)">
                     </glitcher-img>
