@@ -3,10 +3,10 @@
         <input type="file" @change="openFile" />
         <div class="history">
             HISTORY
-            <transition name="fade" v-for="(data, index) in history">
-                <glitcher-img class="pointer" :data="data" @click="rechoose(index)" :maxHeight="100" :maxWidth="100">
+            <transition-group name="fade">
+                <glitcher-img v-for="(data, index) in history" :key="data" class="pointer" :data="data" @click="rechoose(index)" :maxHeight="100" :maxWidth="100">
                 </glitcher-img>
-            </transition>
+            </transition-group>
             <div v-if="history.length === 0" class="explainer">
                 Open or paste an image, then choose a mutation to get started.
             </div>
@@ -16,10 +16,12 @@
                 <glitcher-img :data="current">
                 </glitcher-img>
             </div>
-            <div class="mutation pointer" v-for="(data, index) in mutations">
-                <glitcher-img :data="data" @click="choose(index)">
-                </glitcher-img>
-            </div>
+            <transition-group name="fade">
+                <div class="mutation pointer" v-for="(data, index) in mutations" :key="data">
+                    <glitcher-img :data="data" @click="choose(index)">
+                    </glitcher-img>
+                </div>
+            </transition-group>
         </div>
         <div style="clear: both"></div>
     </div>
@@ -169,7 +171,7 @@ export default {
     margin: .5em;
 }
 .fade-enter-active, .fade-leave-active {
-    transition: all .3s ease;
+    transition: all .3s;
 }
 .fade-enter, .fade-leave-to {
     opacity: 0;
